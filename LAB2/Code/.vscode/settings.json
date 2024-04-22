@@ -1,0 +1,19 @@
+{
+    "files.associations": {
+        "iostream": "cpp",
+        "random": "cpp",
+        "*.tcc": "cpp",
+        "string_view": "cpp",
+        "iosfwd": "cpp",
+        "sstream": "cpp",
+        "regex": "cpp"
+    },
+    "C_Cpp.errorSquiggles": "disabled",
+    "makefile.launchConfigurations": [
+        {
+            "cwd": "/mnt/hgfs/OSLAB/LAB2/Code",
+            "binaryPath": "/mnt/hgfs/OSLAB/LAB2/Code/main",
+            "binaryArgs": []
+        }
+    ]
+}
