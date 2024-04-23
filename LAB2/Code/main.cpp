@@ -63,7 +63,7 @@ struct Instruction{
     }
 };
 
-const char imgName[] = "a.img";
+const char imgName[] = "lab2.img";
 bool hasError; //是否有错误
 string errorMessage; //错误信息
 
@@ -91,7 +91,7 @@ void replaceChar(char str[], char source, char dest, int len);//将字符数组�
 void setErrorMessage(string message); //设置出错位、出错信息。
 string joinFileName(char srcName[], char srcExtension[]); //联合全名和扩展名
 int min(int a, int b);
-extern "C" void myPrint(const char *str);
+extern "C" void myPrint(int len, const char *str);
 
 int main(){
     img.open(imgName);
@@ -261,6 +261,7 @@ File findPath(string path){
             if(vec[i] == "." || vec[i] == "..") continue;
             for(int j = 0; j < 224; j++){//遍历根目录项
                 if(rootDirectoryEntry[j].fileName[0] == '\0') break;
+                if(rootDirectoryEntry[j].fileName[0] == (char)0xE5) continue;
                 string fullName = joinFileName(rootDirectoryEntry[j].fileName, rootDirectoryEntry[j].extensionName);
                 if(vec[i] == fullName){//找到了，改变dirEntry，继续看下一个vec[i]
                     dirEntry = rootDirectoryEntry[j];
@@ -277,6 +278,7 @@ File findPath(string path){
                 bool hasFind = false;
                 for(int j = 0; j < 16; j++){
                     readDirectoryEntry(&tempDirEntry, start + j * 32);
+                    if(tempDirEntry.fileName[0] == (char)0xE5) continue;
                     string fullName = joinFileName(tempDirEntry.fileName, tempDirEntry.extensionName);
                     if(vec[i] == fullName){
                         dirEntry = tempDirEntry;
@@ -332,13 +334,13 @@ int getNextCluster(int cluster) {
 
 void redPrint(const char *s) {
     string str(s);
-    myPrint("\033[31m");
-    myPrint(str.c_str());
-    myPrint("\033[37m");
+    myPrint(strlen("\033[31m"),"\033[31m");
+    myPrint(strlen(str.c_str()), str.c_str());
+    myPrint(strlen("\033[31m"), "\033[37m");
 }
 
 void whitePrint(const char *s) {
-    myPrint(s);
+    myPrint(strlen(s), s);
 }
 
 void split(string str, vector<string> &vec, char splitChar){
@@ -370,6 +372,7 @@ void readSonDirectoryEntries(vector<File> &vec, File f){
             int start = (isRoot ? 19 : 31 + cluster) * 512;
             readDirectoryEntry(&tempDir, start + i * 32);
             if(tempDir.fileName[0] == '\0') break;
+            if(tempDir.fileName[0] == (char)0xE5) continue;
             File tempFile;
             tempFile.fileName = joinFileName(tempDir.fileName, tempDir.extensionName);
             tempFile.init(tempFile.fileName, (f.path + tempFile.fileName + "/"), tempDir.attribution,  tempDir.fileStartCluster, tempDir.fileSize);

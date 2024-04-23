@@ -1,30 +1,10 @@
-; 这几行汇编直接把现成的代码拿来用了ww
 section .text
     global myPrint
 
-slen:
-    push    ebx
-    mov     ebx, eax
-
-nextchar:
-    cmp     byte[eax], 0
-    jz      finished
-    inc     eax
-    jmp     nextchar
-
-finished:
-    sub     eax, ebx 
-    pop     ebx
-    ret
-
 myPrint:
-    mov     eax, [esp + 4]   
-    push    eax
-    call    slen
-    mov     edx, eax       
-    pop     eax
-    mov     ecx, eax
-    mov     ebx, 1        
-    mov     eax, 4
-    int     80h
+    mov eax, 4        ; 设置系统调用号为4（write）
+    mov ebx, 1        ; 文件描述符为1（标准输出）
+    mov ecx, [esp + 8]; 字符串地址
+    mov edx, [esp + 4]; 字符串长度
+    int 80h           ; 调用系统调用
     ret
