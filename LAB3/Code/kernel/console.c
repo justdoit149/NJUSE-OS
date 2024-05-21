@@ -316,10 +316,10 @@ PUBLIC void findmodel(CONSOLE *p_con)
 {														   // 搜索并标红
 	u8 *p = (u8 *)(V_MEM_BASE + p_con->original_addr * 2); // 起始位置
 	u8 *p_vmem = (u8 *)(V_MEM_BASE + p_con->cursor * 2);   // 当前显示地址的pos
-	while (p < ESC_start_pos)
+	int len = p_vmem - ESC_start_pos;
+	while (p < ESC_start_pos && len > 0)
 	{//搜索范围：从开头到开始ESC的位置。
 		int same = 1;
-		int len = p_vmem - ESC_start_pos;
 		for(int i = 0; i < len; i += 2)
 		{
 			if (*(p + i) != *(ESC_start_pos + i))
